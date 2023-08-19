@@ -57,6 +57,10 @@ function incrementByAmountFuc(value) {
 //   store.dispatch(incrementByAmountFuc(3));
 // }, 2000);
 
+// setInterval(() => {
+//   store.dispatch(initUsers(200));
+// }, 2000);
 setInterval(() => {
   store.dispatch(initUsers(200));
-}, 2000);
+}, 3000);
+s;
