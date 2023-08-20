@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import axios from 'axios';
-
+import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
 const init = 'init';
@@ -8,7 +8,10 @@ const increament = 'increment';
 const decrement = 'decrement';
 const incrementByAmount = 'incrementbyAmount';
 
-const store = createStore(reducer, applyMiddleware(logger.default));
+const store = createStore(
+  reducer,
+  applyMiddleware(logger.default, thunk.default)
+);
 
 let history = [];
 
@@ -34,19 +37,35 @@ function reducer(state = { amount: 1 }, action) {
 
 // console.log(store.getState());
 
-store.subscribe(() => {
-  history.push(store.getState());
-  console.log(history);
-});
+// store.subscribe(() => {
+//   history.push(store.getState());
+//   console.log(history);
+// });
+
+// Async API Call
+
+// async function getUser() {
+//   const { data } = await axios.get('http://localhost:3000/accounts/1');
+//   console.log(data);
+// }
+
+// getUser();
 
 // Action Creators
 
-function initUsers(value) {
-  return { type: init, payload: value };
+function getUser(id) {
+  return async (dispatch, getState) => {
+    const { data } = await axios.get(`http://localhost:3000/accounts/${id}`);
+    dispatch(initUser(data.amount));
+  };
 }
 
 function decrementFuc() {
   return { type: decrement };
+}
+
+function initUser(value) {
+  return { type: init, payload: value };
 }
 
 function incrementByAmountFuc(value) {
@@ -60,7 +79,11 @@ function incrementByAmountFuc(value) {
 // setInterval(() => {
 //   store.dispatch(initUsers(200));
 // }, 2000);
-setInterval(() => {
-  store.dispatch(initUsers(200));
+
+// setInterval(() => {
+//   store.dispatch(initUsers(200));
+// }, 3000);
+
+setTimeout(() => {
+  store.dispatch(getUser(2));
 }, 3000);
-s;
